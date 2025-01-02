@@ -19,6 +19,7 @@ import java.time.LocalDate;
 import java.util.Collection;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.ModelMap;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
@@ -146,6 +147,15 @@ class PetController {
 		owner.addPet(pet);
 		this.owners.save(owner);
 		redirectAttributes.addFlashAttribute("message", "Pet details has been edited");
+		return "redirect:/owners/{ownerId}";
+	}
+
+	@Transactional
+	@GetMapping("/pets/{petId}/delete")
+	public String processDelete(@Valid Pet pet, Owner owner) {
+
+		owner.deletePet(pet);
+
 		return "redirect:/owners/{ownerId}";
 	}
 
