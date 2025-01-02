@@ -99,9 +99,20 @@ class PetController {
 	@PostMapping("/pets/new")
 	public String processCreationForm(Owner owner, @Valid Pet pet, BindingResult result, ModelMap model,
 									  RedirectAttributes redirectAttributes) {
-		if (!StringUtils.hasText(pet.getName()) || !pet.isNew() || owner.getPet(pet.getName(), false) == null
-			|| DateUtils.validationDate(pet.getBirthDate())) {
+
+		/*
+		if(!StringUtils.hasText(pet.getName())){
+			result.rejectValue("name", "NotEmptyName", "Pet name cannot be empty");
+		}
+
+		 */
+
+		if (!pet.isNew() || owner.getPet(pet.getName(), false) == null) {
 			result.rejectValue("name", "duplicate", "already exists");
+		}
+
+		if(DateUtils.validationDate(pet.getBirthDate())){
+			result.rejectValue("birthDate", "typeMismatch.birthDate", "birth date should be in the past");
 		}
 
 		owner.addPet(pet);
@@ -128,6 +139,10 @@ class PetController {
 									RedirectAttributes redirectAttributes) {
 
 		String petName = pet.getName();
+
+		if(DateUtils.validationDate(pet.getBirthDate())){
+			result.rejectValue("birthDate", "typeMismatch.birthDate", "birth date should be in the past");
+		}
 
 		// checking if the pet name already exist for the owner
 		if (StringUtils.hasText(petName)) {
