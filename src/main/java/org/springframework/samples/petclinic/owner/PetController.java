@@ -135,6 +135,10 @@ class PetController {
 			}
 		}
 
+		if (pet.getBirthDate().isAfter(LocalDate.now())) {
+			result.rejectValue("birthDate", "birthDate", "birthDate is after current date");
+		}
+
 		if (result.hasErrors()) {
 			model.put("pet", pet);
 			return VIEWS_PETS_CREATE_OR_UPDATE_FORM;
