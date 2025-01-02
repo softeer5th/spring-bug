@@ -5,6 +5,6 @@ import java.time.LocalDate;
 public class DateUtils {
 	static public boolean validationDate(LocalDate date){
 		LocalDate now = LocalDate.now();
-		return now.isAfter(date);
+		return date.isAfter(now);
 	}
 }

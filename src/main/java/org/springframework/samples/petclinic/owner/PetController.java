@@ -99,12 +99,8 @@ class PetController {
 	@PostMapping("/pets/new")
 	public String processCreationForm(Owner owner, @Valid Pet pet, BindingResult result, ModelMap model,
 									  RedirectAttributes redirectAttributes) {
-
-		LocalDate date = pet.getBirthDate();
-
-		boolean b = DateUtils.validationDate(date);
 		if (!StringUtils.hasText(pet.getName()) || !pet.isNew() || owner.getPet(pet.getName(), false) == null
-			|| !b) {
+			|| DateUtils.validationDate(pet.getBirthDate())) {
 			result.rejectValue("name", "duplicate", "already exists");
 		}
 
