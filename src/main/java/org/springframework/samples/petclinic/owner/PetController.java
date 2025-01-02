@@ -107,10 +107,10 @@ class PetController {
 		}
 
 		owner.addPet(pet);
-//		if (result.hasErrors()) {
-//			model.put("pet", pet);
-//			return VIEWS_PETS_CREATE_OR_UPDATE_FORM;
-//		}
+		if (result.hasErrors()) {
+			model.put("pet", pet);
+			return VIEWS_PETS_CREATE_OR_UPDATE_FORM;
+		}
 
 		this.owners.save(owner);
 		redirectAttributes.addFlashAttribute("message", "New Pet has been Added");
