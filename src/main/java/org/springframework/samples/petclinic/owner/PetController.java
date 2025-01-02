@@ -96,8 +96,17 @@ class PetController {
 	@PostMapping("/pets/new")
 	public String processCreationForm(Owner owner, @Valid Pet pet, BindingResult result, ModelMap model,
 			RedirectAttributes redirectAttributes) {
-		if (StringUtils.hasText(pet.getName()) && pet.isNew() && owner.getPet(pet.getName(), false) != null) {
+		if (StringUtils.hasText(pet.getName()) && !pet.isNew() && owner.getPet(pet.getName(), false) != null) {
 			result.rejectValue("name", "duplicate", "already exists");
+		}
+
+		if (pet.getBirthDate() != null && pet.getBirthDate().isAfter(LocalDate.now())) {
+			result.rejectValue("birthDate", "future", "must be a past date");
+		}
+
+		if (result.hasErrors()) {
+			model.put("pet", pet);
+			return VIEWS_PETS_CREATE_OR_UPDATE_FORM;
 		}
 
 		owner.addPet(pet);
