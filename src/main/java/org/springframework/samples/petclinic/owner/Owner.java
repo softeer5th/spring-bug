@@ -170,4 +170,24 @@ public class Owner extends Person {
 		pet.addVisit(visit);
 	}
 
+	/*
+	 new code : check pet
+	 */
+
+	public boolean checkPet(int petId){
+		for(Pet pet : getPets()) {
+			if(pet.getId() == petId){
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public void deletePet(int petId) {
+		for(Pet pet : getPets()) {
+			if(pet.getId() == petId){
+				this.pets.remove(pet);
+			}
+		}
+	}
 }

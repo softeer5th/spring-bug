@@ -23,12 +23,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import jakarta.validation.Valid;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -148,5 +143,26 @@ class PetController {
 		redirectAttributes.addFlashAttribute("message", "Pet details has been edited");
 		return "redirect:/owners/{ownerId}";
 	}
+
+	/*
+		new code
+	 */
+	@GetMapping("/pets/{petId}/delete")
+	public String deletePet(@PathVariable("ownerId") int ownerId, @PathVariable("petId") int petId) {
+		// owner의 펫 중 pedId에 맞는게 있는지 확인
+
+		Owner owner = this.owners.findById(ownerId);
+
+		if(owner.checkPet(petId)){
+			owner.deletePet(petId);
+			owners.save(owner);
+			return "correct";
+		}
+		else{
+			return "redirect:/oups";
+		}
+		// 삭제
+	}
+
 
 }
