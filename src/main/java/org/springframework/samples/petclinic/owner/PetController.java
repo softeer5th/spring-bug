@@ -28,6 +28,8 @@ import org.springframework.web.bind.annotation.*;
 import jakarta.validation.Valid;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import static org.springframework.samples.petclinic.common.Constants.NOT_OWNERS_PET;
+
 /**
  * @author Juergen Hoeller
  * @author Ken Krebs
@@ -145,7 +147,7 @@ class PetController {
 	}
 
 	/*
-		new code
+		new code : delete pet
 	 */
 	@GetMapping("/pets/{petId}/delete")
 	public String deletePet(@PathVariable("ownerId") int ownerId, @PathVariable("petId") int petId) {
@@ -153,16 +155,14 @@ class PetController {
 
 		Owner owner = this.owners.findById(ownerId);
 
-		if(owner.checkPet(petId)){
-			owner.deletePet(petId);
+		int petIdx = owner.checkPet(petId);
+		if(petIdx!=NOT_OWNERS_PET){
+			owner.deletePet(petIdx);
 			owners.save(owner);
-			return "correct";
+			return "redirect:/owners/{ownerId}";
 		}
 		else{
 			return "redirect:/oups";
 		}
-		// 삭제
 	}
-
-
 }
