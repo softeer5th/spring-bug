@@ -17,18 +17,14 @@ package org.springframework.samples.petclinic.owner;
 
 import java.time.LocalDate;
 import java.util.Collection;
+import java.util.function.ToDoubleBiFunction;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import jakarta.validation.Valid;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -113,6 +109,16 @@ class PetController {
 
 		this.owners.save(owner);
 		redirectAttributes.addFlashAttribute("message", "New Pet has been Added");
+		return "redirect:/owners/{ownerId}";
+	}
+
+	@DeleteMapping("/pets/{petId}")
+	public String deletePet(Owner owner, @PathVariable("petId") int petId, ModelMap model,
+							RedirectAttributes redirectAttributes) {
+		Pet pet = owner.getPet(petId);
+		owner.removePet(pet);
+		this.owners.save(owner);
+		redirectAttributes.addFlashAttribute("message", "Pet has been deleted");
 		return "redirect:/owners/{ownerId}";
 	}
 
