@@ -124,6 +124,11 @@ public class Owner extends Person {
 		return null;
 	}
 
+	public void deletePet(int petId) {
+		Pet pet = getPet(petId);
+		this.pets.remove(pet);
+	}
+
 	/**
 	 * Return the Pet with the given name, or null if none found for this Owner.
 	 * @param name to test
