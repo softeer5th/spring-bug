@@ -100,12 +100,16 @@ class PetController {
 		if (StringUtils.hasText(pet.getName()) && pet.isNew() && owner.getPet(pet.getName(), false) != null) {
 			result.rejectValue("name", "duplicate", "already exists");
 		}
+		if(pet.getBirthDate()!= null && pet.getBirthDate().isAfter(LocalDate.now())) {
+			result.rejectValue("birthDate", "future", "birth date is after today's date");
+		}
 
 		owner.addPet(pet);
-//		if (result.hasErrors()) {
-//			model.put("pet", pet);
-//			return VIEWS_PETS_CREATE_OR_UPDATE_FORM;
-//		}
+
+		if (result.hasErrors()) {
+			model.put("pet", pet);
+			return VIEWS_PETS_CREATE_OR_UPDATE_FORM;
+		}
 
 		this.owners.save(owner);
 		redirectAttributes.addFlashAttribute("message", "New Pet has been Added");
