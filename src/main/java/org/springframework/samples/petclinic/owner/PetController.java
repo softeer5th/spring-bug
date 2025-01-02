@@ -147,6 +147,9 @@ class PetController {
 				result.rejectValue("names", "duplicate", "already exists");
 			}
 		}
+		if(pet.getBirthDate()!= null && pet.getBirthDate().isAfter(LocalDate.now())) {
+			result.rejectValue("birthDate", "future", "birth date is after today's date");
+		}
 
 		if (result.hasErrors()) {
 			model.put("pet", pet);
