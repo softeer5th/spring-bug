@@ -170,4 +170,8 @@ public class Owner extends Person {
 		pet.addVisit(visit);
 	}
 
+	public void removePet(Pet pet) {
+		getPets().remove(pet);
+	}
+
 }

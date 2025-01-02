@@ -23,12 +23,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import jakarta.validation.Valid;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -149,4 +144,30 @@ class PetController {
 		return "redirect:/owners/{ownerId}";
 	}
 
+
+	@DeleteMapping("/pets/{petId}")
+	public String processDeleteForm(@PathVariable("petId") int petId, @ModelAttribute Owner owner, BindingResult result, ModelMap model,
+									RedirectAttributes redirectAttributes) {
+
+		Pet pet = owner.getPet(petId);
+//		String petName = pet.getName();
+
+		// checking if the pet name already exist for the owner
+//		if (StringUtils.hasText(petName)) {
+//			Pet existingPet = owner.getPet(petName.toLowerCase(), false);
+//			if (existingPet != null && existingPet.getId() != pet.getId()) {
+//				result.rejectValue("names", "duplicate", "already exists");
+//			}
+//		}
+
+		if (result.hasErrors()) {
+			model.put("pet", pet);
+			return VIEWS_PETS_CREATE_OR_UPDATE_FORM;
+		}
+
+		owner.removePet(pet);
+		this.owners.save(owner);
+		redirectAttributes.addFlashAttribute("message", "Pet details has been deleted");
+		return "redirect:/owners/{ownerId}";
+	}
 }
