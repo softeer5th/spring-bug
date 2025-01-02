@@ -155,4 +155,14 @@ class PetController {
 		return "redirect:/owners/{ownerId}";
 	}
 
+	@GetMapping("/pets/{petId}/delete")
+	public String deletePet(Owner owner, @PathVariable("petId") int petId, ModelMap model,
+							RedirectAttributes redirectAttributes) {
+		Pet pet = owner.getPet(petId);
+		owner.deletePet(pet);
+		this.owners.save(owner);
+		redirectAttributes.addFlashAttribute("message", "Pet has been deleted");
+		return "redirect:/owners/{ownerId}";
+	}
+
 }
