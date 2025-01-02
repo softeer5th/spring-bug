@@ -106,6 +106,10 @@ class PetController {
 			result.rejectValue("name", "duplicate", "already exists");
 		}
 
+		if (LocalDate.now().isBefore(pet.getBirthDate())) {
+			result.rejectValue("birthDate", "invalid", "invalid birthdate");
+		}
+
 		owner.addPet(pet);
 		if (result.hasErrors()) {
 			model.put("pet", pet);
@@ -138,6 +142,11 @@ class PetController {
 				result.rejectValue("names", "duplicate", "already exists");
 			}
 		}
+
+		if (LocalDate.now().isBefore(pet.getBirthDate())) {
+			result.rejectValue("birthDate", "invalid", "invalid birthdate");
+		}
+
 
 		if (result.hasErrors()) {
 			model.put("pet", pet);
