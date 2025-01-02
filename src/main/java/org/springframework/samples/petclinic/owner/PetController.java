@@ -105,6 +105,12 @@ class PetController {
 			result.rejectValue("name", "duplicate", "already exists");
 		}
 
+		if (pet.getBirthDate().isAfter(LocalDate.now())){
+			model.put("pet", pet);
+			result.rejectValue("name", "typeMismatch.birthDate", "already exists");
+			return VIEWS_PETS_CREATE_OR_UPDATE_FORM;
+		}
+
 		owner.addPet(pet);
 //		if (result.hasErrors()) {
 //			model.put("pet", pet);
