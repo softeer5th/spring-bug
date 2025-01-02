@@ -106,14 +106,13 @@ class PetController {
 		if (!StringUtils.hasText(pet.getName()) || !pet.isNew() || owner.getPet(pet.getName(), false) == null
 			|| !b) {
 			result.rejectValue("name", "duplicate", "already exists");
-			return "redirect:/oups";
 		}
 
 		owner.addPet(pet);
-//		if (result.hasErrors()) {
-//			model.put("pet", pet);
-//			return VIEWS_PETS_CREATE_OR_UPDATE_FORM;
-//		}
+		if (result.hasErrors()) {
+			model.put("pet", pet);
+			return VIEWS_PETS_CREATE_OR_UPDATE_FORM;
+		}
 
 		this.owners.save(owner);
 		redirectAttributes.addFlashAttribute("message", "New Pet has been Added");
@@ -138,7 +137,7 @@ class PetController {
 		if (StringUtils.hasText(petName)) {
 			Pet existingPet = owner.getPet(petName.toLowerCase(), false);
 			if (existingPet != null && existingPet.getId() != pet.getId()) {
-				result.rejectValue("names", "duplicate", "already exists");
+				result.rejectValue("name", "duplicate", "already exists");
 			}
 		}
 
