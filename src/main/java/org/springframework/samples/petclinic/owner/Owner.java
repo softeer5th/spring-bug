@@ -33,6 +33,8 @@ import jakarta.persistence.Table;
 import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.NotBlank;
 
+import static org.springframework.samples.petclinic.common.Constants.NOT_OWNERS_PET;
+
 /**
  * Simple JavaBean domain object representing an owner.
  *
@@ -93,7 +95,7 @@ public class Owner extends Person {
 	}
 
 	public void addPet(Pet pet) {
-		if (!pet.isNew()) {
+		if (pet.isNew()) {
 			getPets().add(pet);
 		}
 	}
@@ -170,4 +172,22 @@ public class Owner extends Person {
 		pet.addVisit(visit);
 	}
 
+	/*
+	 new code : check pet
+	 */
+
+	public int checkPet(int petId){
+		for(int i=0;i<pets.size();i++) {
+			if(pets.get(i).getId() == petId){
+				return i;
+			}
+		}
+		return NOT_OWNERS_PET;
+	}
+
+	public void deletePet(int petIdx) {
+
+		this.pets.remove(petIdx);
+
+	}
 }
