@@ -32,6 +32,13 @@
       </div>
     </div>
   </form>
+  <form th:action="@{/owners/__${owner.id}__/pets/__${pet.id}__/delete}" th:object="${pet}" class="form-horizontal" method="post">
+    <div class="col-sm-offset-2 col-sm-10">
+      <button
+        class="btn btn-primary" type="submit" th:text="Delete">
+        </button>
+    </div>
+  </form>
 
 </body>
 

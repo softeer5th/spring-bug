@@ -92,8 +92,12 @@ public class Owner extends Person {
 		return this.pets;
 	}
 
+	public void deletePet(Pet pet) {
+		pets.remove(pet);
+	}
+
 	public void addPet(Pet pet) {
-		if (!pet.isNew()) {
+		if (pet.isNew()) {
 			getPets().add(pet);
 		}
 	}
