@@ -93,7 +93,7 @@ public class Owner extends Person {
 	}
 
 	public void addPet(Pet pet) {
-		if (!pet.isNew()) {
+		if (pet.isNew()) {
 			getPets().add(pet);
 		}
 	}
@@ -168,6 +168,10 @@ public class Owner extends Person {
 		Assert.notNull(pet, "Invalid Pet identifier!");
 
 		pet.addVisit(visit);
+	}
+
+	public void removePet(Pet pet) {
+		getPets().remove(pet);
 	}
 
 }

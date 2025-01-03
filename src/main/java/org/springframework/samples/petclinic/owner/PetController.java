@@ -23,12 +23,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import jakarta.validation.Valid;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -101,8 +96,17 @@ class PetController {
 	@PostMapping("/pets/new")
 	public String processCreationForm(Owner owner, @Valid Pet pet, BindingResult result, ModelMap model,
 			RedirectAttributes redirectAttributes) {
-		if (StringUtils.hasText(pet.getName()) && pet.isNew() && owner.getPet(pet.getName(), false) != null) {
+		if (StringUtils.hasText(pet.getName()) && !pet.isNew() && owner.getPet(pet.getName(), false) != null) {
 			result.rejectValue("name", "duplicate", "already exists");
+		}
+
+		if (pet.getBirthDate() != null && pet.getBirthDate().isAfter(LocalDate.now())) {
+			result.rejectValue("birthDate", "future", "must be a past date");
+		}
+
+		if (result.hasErrors()) {
+			model.put("pet", pet);
+			return VIEWS_PETS_CREATE_OR_UPDATE_FORM;
 		}
 
 		owner.addPet(pet);
@@ -138,6 +142,10 @@ class PetController {
 			}
 		}
 
+		if (pet.getBirthDate() != null && pet.getBirthDate().isAfter(LocalDate.now())) {
+			result.rejectValue("birthDate", "future", "must be a past date");
+		}
+
 		if (result.hasErrors()) {
 			model.put("pet", pet);
 			return VIEWS_PETS_CREATE_OR_UPDATE_FORM;
@@ -149,4 +157,30 @@ class PetController {
 		return "redirect:/owners/{ownerId}";
 	}
 
+
+	@DeleteMapping("/pets/{petId}")
+	public String processDeleteForm(@PathVariable("petId") int petId, @ModelAttribute Owner owner, BindingResult result, ModelMap model,
+									RedirectAttributes redirectAttributes) {
+
+		Pet pet = owner.getPet(petId);
+//		String petName = pet.getName();
+
+		// checking if the pet name already exist for the owner
+//		if (StringUtils.hasText(petName)) {
+//			Pet existingPet = owner.getPet(petName.toLowerCase(), false);
+//			if (existingPet != null && existingPet.getId() != pet.getId()) {
+//				result.rejectValue("names", "duplicate", "already exists");
+//			}
+//		}
+
+		if (result.hasErrors()) {
+			model.put("pet", pet);
+			return VIEWS_PETS_CREATE_OR_UPDATE_FORM;
+		}
+
+		owner.removePet(pet);
+		this.owners.save(owner);
+		redirectAttributes.addFlashAttribute("message", "Pet details has been deleted");
+		return "redirect:/owners/{ownerId}";
+	}
 }
