@@ -93,7 +93,7 @@ public class Owner extends Person {
 	}
 
 	public void addPet(Pet pet) {
-		if (!pet.isNew()) {
+		if (pet.isNew()) {
 			getPets().add(pet);
 		}
 	}
@@ -124,6 +124,11 @@ public class Owner extends Person {
 		return null;
 	}
 
+	public void deletePet(int petId) {
+		Pet pet = getPet(petId);
+		this.pets.remove(pet);
+	}
+
 	/**
 	 * Return the Pet with the given name, or null if none found for this Owner.
 	 * @param name to test
@@ -132,7 +137,7 @@ public class Owner extends Person {
 	public Pet getPet(String name, boolean ignoreNew) {
 		for (Pet pet : getPets()) {
 			String compName = pet.getName();
-			if (compName != null && !compName.equals(name)) {
+			if (compName != null && compName.equals(name)) {
 				if (!ignoreNew || !pet.isNew()) {
 					return pet;
 				}
