@@ -19,6 +19,7 @@ import java.time.LocalDate;
 import java.util.Collection;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.ModelMap;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
@@ -105,11 +106,15 @@ class PetController {
 			result.rejectValue("name", "duplicate", "already exists");
 		}
 
+		if (LocalDate.now().isBefore(pet.getBirthDate())) {
+			result.rejectValue("birthDate", "invalid", "invalid birthdate");
+		}
+
 		owner.addPet(pet);
-//		if (result.hasErrors()) {
-//			model.put("pet", pet);
-//			return VIEWS_PETS_CREATE_OR_UPDATE_FORM;
-//		}
+		if (result.hasErrors()) {
+			model.put("pet", pet);
+			return VIEWS_PETS_CREATE_OR_UPDATE_FORM;
+		}
 
 		this.owners.save(owner);
 		redirectAttributes.addFlashAttribute("message", "New Pet has been Added");
@@ -138,6 +143,11 @@ class PetController {
 			}
 		}
 
+		if (LocalDate.now().isBefore(pet.getBirthDate())) {
+			result.rejectValue("birthDate", "invalid", "invalid birthdate");
+		}
+
+
 		if (result.hasErrors()) {
 			model.put("pet", pet);
 			return VIEWS_PETS_CREATE_OR_UPDATE_FORM;
@@ -146,6 +156,15 @@ class PetController {
 		owner.addPet(pet);
 		this.owners.save(owner);
 		redirectAttributes.addFlashAttribute("message", "Pet details has been edited");
+		return "redirect:/owners/{ownerId}";
+	}
+
+	@Transactional
+	@GetMapping("/pets/{petId}/delete")
+	public String processDelete(@Valid Pet pet, Owner owner) {
+
+		owner.deletePet(pet);
+
 		return "redirect:/owners/{ownerId}";
 	}
 

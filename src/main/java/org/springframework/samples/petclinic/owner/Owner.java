@@ -59,7 +59,7 @@ public class Owner extends Person {
 	@Digits(fraction = 0, integer = 10)
 	private String telephone;
 
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true )
 	@JoinColumn(name = "owner_id")
 	@OrderBy("name")
 	private List<Pet> pets = new ArrayList<>();
@@ -93,9 +93,13 @@ public class Owner extends Person {
 	}
 
 	public void addPet(Pet pet) {
-		if (!pet.isNew()) {
+		if (pet.isNew()) {
 			getPets().add(pet);
 		}
+	}
+
+	public void deletePet(Pet pet) {
+		pets.remove(pet);
 	}
 
 	/**
@@ -132,7 +136,7 @@ public class Owner extends Person {
 	public Pet getPet(String name, boolean ignoreNew) {
 		for (Pet pet : getPets()) {
 			String compName = pet.getName();
-			if (compName != null && !compName.equals(name)) {
+			if (compName != null && compName.equals(name)) {
 				if (!ignoreNew || !pet.isNew()) {
 					return pet;
 				}
