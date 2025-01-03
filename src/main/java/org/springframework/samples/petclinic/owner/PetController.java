@@ -105,6 +105,12 @@ class PetController {
 			result.rejectValue("name", "duplicate", "already exists");
 		}
 
+		if (pet.getBirthDate().isAfter(LocalDate.now())){
+			model.put("pet", pet);
+			result.rejectValue("name", "typeMismatch.birthDate", "already exists");
+			return VIEWS_PETS_CREATE_OR_UPDATE_FORM;
+		}
+
 		owner.addPet(pet);
 //		if (result.hasErrors()) {
 //			model.put("pet", pet);
@@ -146,6 +152,16 @@ class PetController {
 		owner.addPet(pet);
 		this.owners.save(owner);
 		redirectAttributes.addFlashAttribute("message", "Pet details has been edited");
+		return "redirect:/owners/{ownerId}";
+	}
+
+	@GetMapping("/pets/{petId}/delete")
+	public String deletePet(Owner owner, @PathVariable("petId") int petId, ModelMap model,
+							RedirectAttributes redirectAttributes) {
+		Pet pet = owner.getPet(petId);
+		owner.deletePet(pet);
+		this.owners.save(owner);
+		redirectAttributes.addFlashAttribute("message", "Pet has been deleted");
 		return "redirect:/owners/{ownerId}";
 	}
 
