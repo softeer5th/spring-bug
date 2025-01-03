@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 
-<html xmlns:th="https://www.thymeleaf.org"
-  th:replace="~{fragments/layout :: layout (~{::body},'owners')}">
+<html xmlns:th="https://www.thymeleaf.org" xmlns=""
+      th:replace="~{fragments/layout :: layout (~{::body},'owners')}">
 
   <body>
   
@@ -77,6 +77,9 @@
             <tr>
               <td><a th:href="@{__${owner.id}__/pets/__${pet.id}__/edit}">Edit Pet</a></td>
               <td><a th:href="@{__${owner.id}__/pets/__${pet.id}__/visits/new}">Add Visit</a></td>
+              <td><form th:action="@{__${owner.id}__/pets/__${pet.id}__}" th:method="delete">
+                <button type="submit">Delete Pet</button>
+              </form></td>
             </tr>
           </table>
         </td>
